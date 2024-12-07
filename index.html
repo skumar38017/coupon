@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enhanced Offer Card Flip</title>
+    <script src="script.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="offer" id="offer_1">
+        <div class="card-front">
+            <div class="product-img-container">
+                <img src="https://d3pzq99hz695o4.cloudfront.net/temporary/image/20241113105554-766110-190x260.png" alt="Product Image">
+            </div>
+            <div class="product-details-container">
+                <div class="store-img-container">
+                    <img src="https://d3pzq99hz695o4.cloudfront.net/sitespecific/in/stores/web/a5191baa4fad6125a33902117e5e4847/sanfe-coupons-logo-large.jpg?455795" alt="Store Logo">
+                </div>
+                <div class="offer-card-title">Retinol Body Lotion</div>
+                <div class="cb-details">
+                    <img class="cd-cb-icon" src="https://d3mqyttn50wslf.cloudfront.net/modules/mweb/assets/images/svg/cd-cb-icon-new.svg" alt="Cashback" width="26px" height="26px">
+                    <div class="cashback-text">Flat 16.8%</div>
+                </div>
+                <div class="price">At ₹399</div>
+                <div style="font-size: 10px; color: #777;">*After Discount & Cashback</div>
+            </div>
+        </div>
+        <div class="card-back">
+            <div class="offer-back-content">
+                Use code <strong>SAVE20</strong> at checkout to get an additional discount. Offer valid till 31st Dec 2024.
+            </div>
+            <button class="main-btn" onclick="showContent('show-code')">Show Code</button>
+            <button class="detail-cta" onclick="showContent('offer-details')">Offer Details</button>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="modal-overlay" onclick="closeModal()"></div>
+    <div class="content-modal" id="content-modal">
+        <h3 id="modal-title"></h3>
+        <p id="modal-content"></p>
+        <button onclick="closeModal()">Close</button>
+    </div>
+</body>
+</html>
