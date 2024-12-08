@@ -47,7 +47,7 @@ jobs:
         run: |
           ssh -i ~/.ssh/coupon.pem ubuntu@ec2-3-236-110-118.compute-1.amazonaws.com << 'EOF'
             echo "Deleting old files from /home/ubuntu/coupon..."
-            rm -rf /home/ubuntu/coupon/*
+            rm -rf /home/ubuntu/coupon
             rm -rf /home/ubuntu/coupon.zip
             echo "Old files deleted"
             pwd
@@ -60,12 +60,13 @@ jobs:
           ssh -i ~/.ssh/coupon.pem ubuntu@ec2-3-236-110-118.compute-1.amazonaws.com << 'EOF'
             if [ ! -d "/home/ubuntu/coupon" ]; then
               echo "Cloning the repository..."
-              git clone https://github.com/skumar38017/coupon.git /home/ubuntu/coupon
+              git clone https://github.com/skumar38017/coupon.git /home/ubuntu/
               echo "Cloning complete"
             else
               echo "Repository already exists. Pulling the latest changes..."
               cd /home/ubuntu/coupon
-              git pull origin main
+              fit fetch
+              git pull origin master
               echo "Git pull complete"
             fi
             pwd
