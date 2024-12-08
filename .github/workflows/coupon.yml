@@ -90,7 +90,9 @@ jobs:
         run: |
           ssh -i ~/.ssh/coupon.pem ubuntu@ec2-3-236-110-118.compute-1.amazonaws.com << 'EOF'
             echo "Restarting nginx server..."
+            sudo systemctl reload nginx.service 
             sudo systemctl restart nginx
+            sudo systemctl status nginx
             echo "Nginx server restarted"
           EOF
 
