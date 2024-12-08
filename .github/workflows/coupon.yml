@@ -25,25 +25,31 @@ jobs:
       # Set up SSH using the PEM key only if not already set up
       - name: Set up SSH
         run: |
+          # Ensure the .ssh directory exists in the runner's home directory
           if [ ! -d ~/.ssh ]; then
             echo "Creating .ssh directory..."
             mkdir -p ~/.ssh
           fi
 
+          # Check if coupon.pem exists, then set it up
           if [ ! -f ~/.ssh/coupon.pem ]; then
             echo "Setting up SSH key..."
             echo "${{ secrets.COUPON_SSH_KEY }}" > ~/.ssh/coupon.pem
             chmod 600 ~/.ssh/coupon.pem
+          else
+            echo "SSH key already set up, skipping setup."
           fi
 
           # Ensure known_hosts exists for SSH keyscan to work
           if [ ! -f ~/.ssh/known_hosts ]; then
+            echo "Creating known_hosts file..."
             touch ~/.ssh/known_hosts
           fi
 
+          # Add the server's SSH fingerprint to known_hosts
           ssh-keyscan -H ec2-3-236-110-118.compute-1.amazonaws.com >> ~/.ssh/known_hosts
           pwd
-          ls -la
+          ls -la ~/.ssh
 
       # Delete old files and folders from logged-in Ubuntu server
       - name: Delete old files and folders from logged-in Ubuntu server
