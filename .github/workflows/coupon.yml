@@ -2,7 +2,7 @@ name: deploycoupon
 
 on:
   push:
-    branches: [main]
+    branches: [main]  # Triggers on push to 'main' branch
   workflow_dispatch:
     inputs:
       branch:
@@ -23,8 +23,7 @@ jobs:
 
     steps:
 
-
-      # Step 2: SSH into the remote server and delete old files
+      # Step 1: SSH into the remote server and delete old files
       - name: SSH into server and delete old files and folders
         run: |
           ssh -i ${{ secrets.UBUNTU_PRIVATE_KEY }} ubuntu@ec2-3-236-110-118.compute-1.amazonaws.com << 'EOF'
@@ -36,7 +35,7 @@ jobs:
             ls -la /home/ubuntu
           EOF
 
-      # Step 3: Clone the repository or pull the latest changes
+      # Step 2: Clone the repository or pull the latest changes
       - name: Clone or Pull the latest code
         run: |
           ssh -i ${{ secrets.UBUNTU_PRIVATE_KEY }} ubuntu@ec2-3-236-110-118.compute-1.amazonaws.com << 'EOF'
@@ -54,7 +53,7 @@ jobs:
             ls -la /home/ubuntu/coupon
           EOF
 
-      # Step 4: Copy files or folder into nginx server
+      # Step 3: Copy files into nginx server
       - name: Copy files into nginx server
         run: |
           ssh -i ${{ secrets.UBUNTU_PRIVATE_KEY }} ubuntu@ec2-3-236-110-118.compute-1.amazonaws.com << 'EOF'
@@ -66,7 +65,7 @@ jobs:
             ls -la /var/www/html
           EOF
 
-      # Step 5: Restart nginx server
+      # Step 4: Restart nginx server
       - name: Restart nginx server
         run: |
           ssh -i ${{ secrets.UBUNTU_PRIVATE_KEY }} ubuntu@ec2-3-236-110-118.compute-1.amazonaws.com << 'EOF'
