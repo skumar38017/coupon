@@ -2,7 +2,7 @@ name: deploycoupon
 
 on:
   push:
-    branches: [main]  # Trigger on push to main branch
+    branches: [main]
   workflow_dispatch:
     inputs:
       branch:
@@ -22,7 +22,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Set up SSH using the PEM key only if not already set up
+      # Step 1: Set up SSH key
       - name: Set up SSH
         run: |
           # Ensure .ssh directory exists for the runner's home directory
@@ -42,56 +42,53 @@ jobs:
           pwd
           ls -la ~/.ssh
 
-      # Delete old files and folders from the logged-in Ubuntu server
-      - name: Delete old files and folders from logged-in Ubuntu server
+      # Step 2: SSH into the remote server and delete old files
+      - name: SSH into server and delete old files and folders
         run: |
           ssh -i ~/.ssh/coupon.pem ubuntu@ec2-3-236-110-118.compute-1.amazonaws.com << 'EOF'
-            rm -rf /home/ubuntu/coupon
+            echo "Deleting old files from /home/ubuntu/coupon..."
+            rm -rf /home/ubuntu/coupon/*
             rm -rf /home/ubuntu/coupon.zip
-            pwd
-            ls -la
             echo "Old files deleted"
+            pwd
+            ls -la /home/ubuntu
           EOF
 
-      # Checkout the code
-      - name: Checkout code
+      # Step 3: Clone the repository or pull the latest changes
+      - name: Clone or Pull the latest code
         run: |
-          if [ ! -d "/home/ubuntu/coupon" ]; then
-            echo "Cloning the repository..."
-            git clone https://github.com/tagglab/coupon.git /home/ubuntu/coupon
-            echo "Cloning complete"
-          else
-            echo "Repository already exists. Pulling the latest changes..."
-            cd /home/ubuntu/coupon
-            git pull origin main
+          ssh -i ~/.ssh/coupon.pem ubuntu@ec2-3-236-110-118.compute-1.amazonaws.com << 'EOF'
+            if [ ! -d "/home/ubuntu/coupon" ]; then
+              echo "Cloning the repository..."
+              git clone https://github.com/tagglab/coupon.git /home/ubuntu/coupon
+              echo "Cloning complete"
+            else
+              echo "Repository already exists. Pulling the latest changes..."
+              cd /home/ubuntu/coupon
+              git pull origin main
+              echo "Git pull complete"
+            fi
             pwd
-            ls -la
-          fi
+            ls -la /home/ubuntu/coupon
+          EOF
 
-      # Delete previous files and folders from nginx server
-      - name: Delete previous files and folders from nginx server
+      # Step 4: Copy files or folder into nginx server
+      - name: Copy files into nginx server
         run: |
-          echo "Deleting previous files and folders..."
-          sudo rm -rf /var/www/html/coupon
-          sudo rm -rf /var/www/html/coupon.zip
-          pwd
-          ls -la
-
-      # Copy files or folder into nginx server
-      - name: Copy files or folder into nginx server
-        run: |
-          if [ ! -d "/var/www/html/coupon" ]; then
-            echo "Copying the files..."
+          ssh -i ~/.ssh/coupon.pem ubuntu@ec2-3-236-110-118.compute-1.amazonaws.com << 'EOF'
+            echo "Copying files to Nginx server..."
+            sudo rm -rf /var/www/html/coupon  # Remove old files from Nginx directory
             sudo cp -r /home/ubuntu/coupon /var/www/html/
+            echo "Files copied to Nginx server"
             pwd
-            ls -la
-          else
-            echo "Files already exist. Skipping copy."
-            ls -la
-          fi
+            ls -la /var/www/html
+          EOF
 
-      # Restart nginx server
+      # Step 5: Restart nginx server
       - name: Restart nginx server
         run: |
-          echo "Restarting nginx server..."
-          sudo systemctl restart nginx
+          ssh -i ~/.ssh/coupon.pem ubuntu@ec2-3-236-110-118.compute-1.amazonaws.com << 'EOF'
+            echo "Restarting nginx server..."
+            sudo systemctl restart nginx
+            echo "Nginx server restarted"
+          EOF
