@@ -60,7 +60,7 @@ jobs:
           ssh -i ~/.ssh/coupon.pem ubuntu@ec2-3-236-110-118.compute-1.amazonaws.com << 'EOF'
             if [ ! -d "/home/ubuntu/coupon" ]; then
               echo "Cloning the repository..."
-              git clone https://github.com/skumar38017/coupon.git /home/ubuntu/
+              git clone https://github.com/skumar38017/coupon.git /home/ubuntu/coupon
               echo "Cloning complete"
             else
               echo "Repository already exists. Pulling the latest changes..."
