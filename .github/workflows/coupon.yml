@@ -8,7 +8,7 @@ on:
       branch:
         description: 'Deploy Coupon branch on Ubuntu server'
         required: true
-        default: 'master'
+        default: 'main'
         type: choice
         options:
           - master
@@ -45,7 +45,7 @@ jobs:
       # Step 2: SSH into the remote server and delete old files
       - name: SSH into server and delete old files and folders
         run: |
-          ssh -i ${{ secrets.UNUNTU_PEM_KEY }} ubuntu@ec2-3-236-110-118.compute-1.amazonaws.com << 'EOF'
+          ssh -i ~/.ssh/coupon.pem ubuntu@ec2-3-236-110-118.compute-1.amazonaws.com << 'EOF'
             echo "Deleting old files from /home/ubuntu/coupon..."
             rm -rf /home/ubuntu/coupon/*
             rm -rf /home/ubuntu/coupon.zip
@@ -57,7 +57,7 @@ jobs:
       # Step 3: Clone the repository or pull the latest changes
       - name: Clone or Pull the latest code
         run: |
-          ssh -i ${{ secrets.UNUNTU_PEM_KEY }} ubuntu@ec2-3-236-110-118.compute-1.amazonaws.com << 'EOF'
+          ssh -i ~/.ssh/coupon.pem ubuntu@ec2-3-236-110-118.compute-1.amazonaws.com << 'EOF'
             if [ ! -d "/home/ubuntu/coupon" ]; then
               echo "Cloning the repository..."
               git clone https://github.com/tagglab/coupon.git /home/ubuntu/coupon
@@ -75,7 +75,7 @@ jobs:
       # Step 4: Copy files or folder into nginx server
       - name: Copy files into nginx server
         run: |
-          ssh -i ${{ secrets.UNUNTU_PEM_KEY }} ubuntu@ec2-3-236-110-118.compute-1.amazonaws.com << 'EOF'
+          ssh -i ~/.ssh/coupon.pem ubuntu@ec2-3-236-110-118.compute-1.amazonaws.com << 'EOF'
             echo "Copying files to Nginx server..."
             sudo rm -rf /var/www/html/coupon  # Remove old files from Nginx directory
             sudo cp -r /home/ubuntu/coupon /var/www/html/
@@ -87,7 +87,7 @@ jobs:
       # Step 5: Restart nginx server
       - name: Restart nginx server
         run: |
-          ssh -i ${{ secrets.UNUNTU_PEM_KEY }} ubuntu@ec2-3-236-110-118.compute-1.amazonaws.com << 'EOF'
+          ssh -i ~/.ssh/coupon.pem ubuntu@ec2-3-236-110-118.compute-1.amazonaws.com << 'EOF'
             echo "Restarting nginx server..."
             sudo systemctl restart nginx
             echo "Nginx server restarted"
