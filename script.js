@@ -31,8 +31,8 @@ function renderOffers() {
                     <div class="store-img-container">
                         <img src="${offer.storeLogo}" alt="Store Logo">
                         <div class="date-time">
-                            <p id="date-time-${index}">Start Date: ${offer.startDate}</p> <!-- Timer placeholder -->
-                            <p>End Date: ${offer.endDate}</p>
+                            <p id="date-time-${index}"> ${offer.startDate}</p> <!-- Timer placeholder -->
+                            <p>${offer.endDate}</p>
                         </div>
                     </div>
                     <div class="offer-card-title">${offer.title}</div>
@@ -100,9 +100,9 @@ function startOfferTimer(index) {
     const offerTimer = setInterval(() => {
         if (offerTimeLeft <= 0) {
             clearInterval(offerTimer);
-            dateTimeElement.innerHTML = 'Time Expired'; // Timer expired message
+            dateTimeElement.innerHTML = 'Expired'; // Timer expired message
         } else {
-            dateTimeElement.innerHTML = `Time Remaining: ${formatTime(offerTimeLeft)}`;
+            dateTimeElement.innerHTML = `${formatTime(offerTimeLeft)}`;
             offerTimeLeft--;
         }
     }, 1000);
