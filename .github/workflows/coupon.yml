@@ -25,8 +25,11 @@ jobs:
       # Set up SSH using the PEM key only if not already set up
       - name: Set up SSH
         run: |
-          # Ensure .ssh directory exists for the runner
-          mkdir -p ~/.ssh
+          # Ensure .ssh directory exists for the runner's home directory
+          if [ ! -d ~/.ssh ]; then
+            echo "Creating .ssh directory..."
+            mkdir -p ~/.ssh
+          fi
 
           # Save the SSH private key from GitHub Secrets to the runner's ~/.ssh/coupon.pem
           echo "${{ secrets.UBUNTU_PRIVATE_KEY }}" > ~/.ssh/coupon.pem
