@@ -2,16 +2,16 @@ name: deploycoupon
 
 on:
   push:
-    branches: [main]  # Triggers on push to 'main' branch
+    branches: [master]  # Triggers on push to 'main' branch
   workflow_dispatch:
     inputs:
       branch:
         description: 'Deploy Coupon branch on Ubuntu server'
         required: true
-        default: 'main'
+        default: 'master'
         type: choice
         options:
-          - main
+          - master
 
 permissions:
   contents: read
