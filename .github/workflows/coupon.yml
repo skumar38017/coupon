@@ -2,9 +2,7 @@ name: deploycoupon
 
 on:
   push:
-    branches: [main]
-    paths:
-      - '.github/workflows/**'
+    branches: [main]  # Trigger on push to main branch
   workflow_dispatch:
     inputs:
       branch:
