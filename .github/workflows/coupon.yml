@@ -33,7 +33,7 @@ jobs:
 
           # Save the SSH private key from GitHub Secrets to the runner's ~/.ssh/coupon.pem
           echo "${{ secrets.UBUNTU_PRIVATE_KEY }}" > ~/.ssh/coupon.pem
-          chmod 600 ~/.ssh/coupon.pem 
+          chmod 600 ~/.ssh/coupon.pem
 
           # Add the server's SSH fingerprint to known_hosts to avoid SSH warning
           ssh-keyscan -H ec2-3-236-110-118.compute-1.amazonaws.com >> ~/.ssh/known_hosts
@@ -83,7 +83,7 @@ jobs:
           if [ ! -d "/var/www/html/coupon" ]; then
             echo "Copying the files..."
             sudo cp -r /home/ubuntu/coupon /var/www/html/
-            pwd 
+            pwd
             ls -la
           else
             echo "Files already exist. Skipping copy."
