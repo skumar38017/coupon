@@ -25,16 +25,25 @@ jobs:
       # Set up SSH using the PEM key only if not already set up
       - name: Set up SSH
         run: |
+          if [ ! -d ~/.ssh ]; then
+            echo "Creating .ssh directory..."
+            mkdir -p ~/.ssh
+          fi
+
           if [ ! -f ~/.ssh/coupon.pem ]; then
             echo "Setting up SSH key..."
             echo "${{ secrets.COUPON_SSH_KEY }}" > ~/.ssh/coupon.pem
             chmod 600 ~/.ssh/coupon.pem
-            ssh-keyscan -H ec2-3-236-110-118.compute-1.amazonaws.com >> ~/.ssh/known_hosts
-            pwd
-            ls -la
-          else
-            echo "SSH key already set up, skipping setup."
           fi
+
+          # Ensure known_hosts exists for SSH keyscan to work
+          if [ ! -f ~/.ssh/known_hosts ]; then
+            touch ~/.ssh/known_hosts
+          fi
+
+          ssh-keyscan -H ec2-3-236-110-118.compute-1.amazonaws.com >> ~/.ssh/known_hosts
+          pwd
+          ls -la
 
       # Delete old files and folders from logged-in Ubuntu server
       - name: Delete old files and folders from logged-in Ubuntu server
@@ -50,9 +59,9 @@ jobs:
       # Checkout the code
       - name: Checkout code
         run: |
-          if [ ! -d "/home/ubuntu" ]; then
+          if [ ! -d "/home/ubuntu/coupon" ]; then
             echo "Cloning the repository..."
-            git clone https://github.com/tagglab/coupon.git /home/ubuntu/
+            git clone https://github.com/tagglab/coupon.git /home/ubuntu/coupon
             echo "Cloning complete"
           else
             echo "Repository already exists. Pulling the latest changes..."
@@ -71,12 +80,12 @@ jobs:
           pwd
           ls -la
 
-      # copy file or folder into nginx server `/var/www/html`
+      # Copy file or folder into nginx server `/var/www/html`
       - name: Copy file or folder into nginx server
         run: |
-          if [ ! -d "/home/ubuntu/coupon" ]; then
+          if [ ! -d "/var/www/html/coupon" ]; then
             echo "Copying the files..."
-            cp -r /home/ubuntu/coupon /var/www/html/
+            sudo cp -r /home/ubuntu/coupon /var/www/html/
             pwd 
             ls -la
           else
