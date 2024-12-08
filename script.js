@@ -1,3 +1,6 @@
+// This is the script.js file for the coupon website
+// It contains the JavaScript code for the offers
+
 const offersData = [
     {
         imageUrl: "https://d3pzq99hz695o4.cloudfront.net/temporary/image/20241113105554-766110-190x260.png",
