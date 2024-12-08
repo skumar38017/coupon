@@ -82,7 +82,7 @@ jobs:
             sudo cp -r /home/ubuntu/coupon /var/www/html/
             echo "Files copied to Nginx server"
             pwd
-            ls -la /var/www/html
+            tree /var/www/html
           EOF
 
       # Step 5: Restart nginx server
