@@ -95,7 +95,7 @@ function closeModal() {
 // Start a timer for the clicked offer
 function startOfferTimer(index) {
     const dateTimeElement = document.getElementById(`date-time-${index}`);
-    let offerTimeLeft = 5 * 60; // 5 minutes in seconds
+    let offerTimeLeft = 2 * 60; // 5 minutes in seconds
 
     const offerTimer = setInterval(() => {
         if (offerTimeLeft <= 0) {
