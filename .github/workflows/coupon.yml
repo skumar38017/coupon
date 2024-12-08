@@ -22,30 +22,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Set up SSH key
-      - name: Set up SSH
-        run: |
-          # Ensure .ssh directory exists for the runner's home directory
-          if [ ! -d ~/.ssh ]; then
-            echo "Creating .ssh directory..."
-            mkdir -p ~/.ssh
-          fi
 
-          # Save the SSH private key from GitHub Secrets to the runner's ~/.ssh/coupon.pem
-          echo "${{ secrets.UBUNTU_PRIVATE_KEY }}" > ~/.ssh/coupon.pem
-          chmod 600 ~/.ssh/coupon.pem
-
-          # Add the server's SSH fingerprint to known_hosts to avoid SSH warning
-          ssh-keyscan -H ec2-3-236-110-118.compute-1.amazonaws.com >> ~/.ssh/known_hosts
-
-          # Debug the SSH setup by listing the .ssh contents
-          pwd
-          ls -la ~/.ssh
 
       # Step 2: SSH into the remote server and delete old files
       - name: SSH into server and delete old files and folders
         run: |
-          ssh -i ~/.ssh/coupon.pem ubuntu@ec2-3-236-110-118.compute-1.amazonaws.com << 'EOF'
+          ssh -i ${{ secrets.UBUNTU_PRIVATE_KEY }} ubuntu@ec2-3-236-110-118.compute-1.amazonaws.com << 'EOF'
             echo "Deleting old files from /home/ubuntu/coupon..."
             rm -rf /home/ubuntu/coupon/*
             rm -rf /home/ubuntu/coupon.zip
@@ -57,7 +39,7 @@ jobs:
       # Step 3: Clone the repository or pull the latest changes
       - name: Clone or Pull the latest code
         run: |
-          ssh -i ~/.ssh/coupon.pem ubuntu@ec2-3-236-110-118.compute-1.amazonaws.com << 'EOF'
+          ssh -i ${{ secrets.UBUNTU_PRIVATE_KEY }} ubuntu@ec2-3-236-110-118.compute-1.amazonaws.com << 'EOF'
             if [ ! -d "/home/ubuntu/coupon" ]; then
               echo "Cloning the repository..."
               git clone https://github.com/tagglab/coupon.git /home/ubuntu/coupon
@@ -75,7 +57,7 @@ jobs:
       # Step 4: Copy files or folder into nginx server
       - name: Copy files into nginx server
         run: |
-          ssh -i ~/.ssh/coupon.pem ubuntu@ec2-3-236-110-118.compute-1.amazonaws.com << 'EOF'
+          ssh -i ${{ secrets.UBUNTU_PRIVATE_KEY }} ubuntu@ec2-3-236-110-118.compute-1.amazonaws.com << 'EOF'
             echo "Copying files to Nginx server..."
             sudo rm -rf /var/www/html/coupon  # Remove old files from Nginx directory
             sudo cp -r /home/ubuntu/coupon /var/www/html/
@@ -87,7 +69,7 @@ jobs:
       # Step 5: Restart nginx server
       - name: Restart nginx server
         run: |
-          ssh -i ~/.ssh/coupon.pem ubuntu@ec2-3-236-110-118.compute-1.amazonaws.com << 'EOF'
+          ssh -i ${{ secrets.UBUNTU_PRIVATE_KEY }} ubuntu@ec2-3-236-110-118.compute-1.amazonaws.com << 'EOF'
             echo "Restarting nginx server..."
             sudo systemctl restart nginx
             echo "Nginx server restarted"
