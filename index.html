@@ -1,3 +1,7 @@
+<!-- This is the index.html file for the coupon website -->
+<!-- It contains the HTML structure and links to the CSS and JavaScript files -->
+<!-- index.html -->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -18,8 +22,10 @@
         <p id="modal-content"></p>
         <button onclick="closeModal()">Close</button>
     </div>
-</span>
+    </span>
 
-    <script src="script.js"></script>
+    <!-- Load config.js first to ensure it's available for script.js -->
+    <script src="config.js"></script>  <!-- Ensure this is first -->
+    <script src="script.js"></script>  <!-- Then load script.js -->
 </body>
 </html>

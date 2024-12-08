@@ -1,20 +1,21 @@
 // This is the script.js file for the coupon website
 // It contains the JavaScript code for the offers
+// script.js
 
-const offersData = [
-    {
-        imageUrl: "https://d3pzq99hz695o4.cloudfront.net/temporary/image/20241113105554-766110-190x260.png",
-        storeLogo: "https://d3pzq99hz695o4.cloudfront.net/sitespecific/in/stores/web/a5191baa4fad6125a33902117e5e4847/sanfe-coupons-logo-large.jpg?455795",
-        title: "Retinol Body Lotion",
-        cashback: "Flat 16.8%",
-        price: "₹399",
-        startDate: "11/22/2024",
-        endDate: "12/31/2024",
-        promoCode: "SAVE20",
-        details: "Flat 16.8% cashback and additional discounts on this product."
-    },
-    // Add more objects for dynamic offers
-];
+// script.js
+
+// Use the offers from config.js to render the dynamic offer cards
+const offersData = config.offers.map(offer => ({
+    imageUrl: offer.imageUrl,
+    storeLogo: offer.storeLogo,
+    title: offer.title,
+    cashback: offer.cashback,
+    price: `${config.currency}${offer.price}`, // Dynamically adding currency
+    startDate: offer.startDate,
+    endDate: offer.endDate,
+    promoCode: offer.promoCode,
+    details: offer.details
+}));
 
 // Store active timers for each offer
 const activeTimers = {};
