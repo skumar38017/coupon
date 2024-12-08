@@ -92,3 +92,4 @@ jobs:
             sudo systemctl restart nginx
             echo "Nginx server restarted"
           EOF
+
