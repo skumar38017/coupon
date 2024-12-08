@@ -22,8 +22,8 @@ body {
 }
 
 .offer {
-    width: 200px;
-    height: 320px;
+    width: 170px;
+    height: 310px;
     perspective: 1000px;
     position: relative;
 }
