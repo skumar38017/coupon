@@ -13,8 +13,8 @@ const offersData = [
     // Add more objects for dynamic offers
 ];
 
-let globalTimer; // Global timer to continuously count down
-let globalTimeLeft = 5 * 60; // 5 minutes in seconds
+// Store active timers for each offer
+const activeTimers = {};
 
 function renderOffers() {
     const offerContainer = document.querySelector('.offer-container');
@@ -31,7 +31,7 @@ function renderOffers() {
                     <div class="store-img-container">
                         <img src="${offer.storeLogo}" alt="Store Logo">
                         <div class="date-time">
-                            <p id="date-time-${index}"> ${offer.startDate}</p> <!-- Timer placeholder -->
+                            <p id="date-time-${index}">${offer.startDate}</p>
                             <p>${offer.endDate}</p>
                         </div>
                     </div>
@@ -62,7 +62,7 @@ function showContent(type, index) {
     const title = document.getElementById('modal-title');
     const content = document.getElementById('modal-content');
     const offer = offersData[index];
-    const dateTimeElement = document.getElementById(`date-time-${index}`); // Access the correct date-time for the offer
+    const dateTimeElement = document.getElementById(`date-time-${index}`);
 
     if (type === 'show-code') {
         title.textContent = 'Promo Code';
@@ -70,8 +70,10 @@ function showContent(type, index) {
             Use code <strong>${offer.promoCode}</strong> to avail an additional discount!
         `;
 
-        // Start the timer and replace the start date with the countdown timer for this specific offer
-        startOfferTimer(index);
+        // Check if a timer already exists for this offer
+        if (!activeTimers[index]) {
+            startOfferTimer(index);
+        }
 
         // Close the modal
         closeModal();
@@ -95,12 +97,19 @@ function closeModal() {
 // Start a timer for the clicked offer
 function startOfferTimer(index) {
     const dateTimeElement = document.getElementById(`date-time-${index}`);
-    let offerTimeLeft = 2 * 60; // 5 minutes in seconds
+    let offerTimeLeft = 2 * 60; // 2 minutes in seconds
 
-    const offerTimer = setInterval(() => {
+    // Clear any existing timer for this offer
+    if (activeTimers[index]) {
+        clearInterval(activeTimers[index]);
+    }
+
+    // Start a new timer and store its reference
+    activeTimers[index] = setInterval(() => {
         if (offerTimeLeft <= 0) {
-            clearInterval(offerTimer);
-            dateTimeElement.innerHTML = 'Expired'; // Timer expired message
+            clearInterval(activeTimers[index]);
+            dateTimeElement.innerHTML = 'Expired';
+            delete activeTimers[index]; // Remove the timer reference
         } else {
             dateTimeElement.innerHTML = `${formatTime(offerTimeLeft)}`;
             offerTimeLeft--;
